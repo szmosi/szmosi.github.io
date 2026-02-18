@@ -24,6 +24,6 @@ latest_posts:
 
 This is a test of how this miracle works. Or not? Only time will tell...
 
-Hope is the last thing to die...
+Hope is the last thing to die.
 
 Best,  
