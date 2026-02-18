@@ -22,6 +22,6 @@ latest_posts:
 
 ## Hello Digital Traveler
 
-This is a test of how this miracle works. Or not?
+This is a test of how this miracle works. Or not? Only time will tell...
 
 Best,  
