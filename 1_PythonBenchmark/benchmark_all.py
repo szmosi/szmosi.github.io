@@ -15,17 +15,17 @@ except ImportError:
 
 # 1. Pure Python Implementation
 def python_sum(n):
-    res = 0
+    res = 0.0
     for i in range(int(n)):
-        res += i * i
-    return res
+        res += float(i) * float(i)
+    return res # Returning forces Python to finish the calc
 
-# 2. Numba (Compiled - Stand-in for Cython Single Core)
+# 2. Numba
 @jit(nopython=True)
 def numba_sum(n):
-    res = 0
+    res = 0.0
     for i in range(int(n)):
-        res += i * i
+        res += float(i) * float(i)
     return res
 
 def run_benchmarks():
@@ -36,35 +36,35 @@ def run_benchmarks():
     print(f"🚀 Starting Benchmarks on i5-8600K (6C/6T) & GTX 1070 Ti...")
 
     # --- 1. PYTHON SINGLE CORE ---
-    start = time.time()
+    start = time.perf_counter()
     python_sum(N)
-    results['Python (Single)'] = time.time() - start
+    results['Python (Single)'] = time.perf_counter() - start
 
     # --- 2. PYTHON ALL CORES ---
-    start = time.time()
+    start = time.perf_counter()
     cores = mp.cpu_count()
     with mp.Pool(cores) as p:
         p.map(python_sum, [N // cores] * cores)
-    results['Python (All Cores)'] = time.time() - start
+    results['Python (All Cores)'] = time.perf_counter() - start
 
     # --- 3. NUMPY (Single/Multi) ---
     # Note: NumPy is multi-threaded for math, so it uses your cores automatically
     arr = np.arange(N, dtype=np.float64)
-    start = time.time()
+    start = time.perf_counter()
     np.sum(arr**2)
-    results['NumPy'] = time.time() - start
+    results['NumPy'] = time.perf_counter() - start
 
     # --- 4. NUMBA (C-Speed Single Core) ---
     numba_sum(1) # Warmup
-    start = time.time()
+    start = time.perf_counter()
     numba_sum(N)
-    results['Numba (C-Speed)'] = time.time() - start
+    results['Numba (C-Speed)'] = time.perf_counter() - start
 
     # --- 5. CYTHON MULTICORE ---
     if CYTHON_AVAILABLE:
-        start = time.time()
+        start = time.perf_counter()
         cython_parallel_sum(N)
-        results['Cython (Multi)'] = time.time() - start
+        results['Cython (Multi)'] = time.perf_counter() - start
     else:
         results['Cython (Multi)'] = 0
 
@@ -76,10 +76,10 @@ def run_benchmarks():
         b = torch.randn(size, size, device='cuda')
         torch.cuda.synchronize() # Warmup
         
-        start = time.time()
+        start = time.perf_counter()
         torch.mm(a, b)
         torch.cuda.synchronize()
-        results['GPU (1070 Ti)'] = time.time() - start
+        results['GPU (1070 Ti)'] = time.perf_counter() - start
 
     # --- RESULTS TABLE ---
     print("\n" + "="*40)
