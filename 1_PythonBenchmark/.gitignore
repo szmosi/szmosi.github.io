@@ -10,3 +10,4 @@ Output/
 archive/
 __pycache__/
 *.obj
+\build\temp.win-amd64-cpython-312\Release
