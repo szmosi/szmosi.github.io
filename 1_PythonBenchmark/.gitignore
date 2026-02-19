@@ -1,3 +1,12 @@
 notes.txt
 fast_code.cp312-win_amd64.pyd
 benchmark_results.png
+/build
+/Output
+/archive
+/__pycache__
+build/
+Output/
+archive/
+__pycache__/
+*.obj
