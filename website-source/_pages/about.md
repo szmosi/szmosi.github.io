@@ -40,3 +40,45 @@ To see what I’ve been working on—from BI platforms to automation tools—hea
 
 Best,  
 **Marton**
+
+<div class="container mt-5">
+  <div class="row">
+    
+    <div class="col-md-4 mb-4">
+      <div style="background-color: #f0f7ff; border-radius: 15px; padding: 20px; height: 100%; border: 1px solid #d0e1f9;">
+        <h5 style="color: #0056b3;"><i class="fas fa-code"></i> Languages</h5>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
+          <li>Python [cite: 5]</li>
+          <li>C#</li>
+          <li>JavaScript</li>
+          <li>SQL & VBA [cite: 5, 32]</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div style="background-color: #fffaf0; border-radius: 15px; padding: 20px; height: 100%; border: 1px solid #f9e1d0;">
+        <h5 style="color: #b35600;"><i class="fas fa-chart-bar"></i> Visualization & Tools</h5>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
+          <li>Power BI [cite: 5]</li>
+          <li>Tableau [cite: 36]</li>
+          <li>Alteryx</li>
+          <li>GIS Software [cite: 30, 36]</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div style="background-color: #f0fff4; border-radius: 15px; padding: 20px; height: 100%; border: 1px solid #d0f9d1;">
+        <h5 style="color: #007a33;"><i class="fas fa-brain"></i> AI & Libraries</h5>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
+          <li>PyTorch & TensorFlow</li>
+          <li>LangChain (RAG) [cite: 43]</li>
+          <li>Pandas & NumPy [cite: 33, 55]</li>
+          <li>Matplotlib & Seaborn [cite: 55]</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
