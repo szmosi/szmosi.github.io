@@ -9,8 +9,6 @@ from matplotlib.animation import FuncAnimation
 np.seterr(all='ignore') 
 
 
-
-
 ENABLED_METHODS = {
     "Py Single": True,
     "Py Multi":  True,
