@@ -9,39 +9,21 @@ category: work
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all.png" title="Benchmark Results" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all.png" title="Project Banner" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 
-## 🏎️ High-Performance Computing Benchmarks
+## 🏎️ The Scaling Challenge
 
-How do you make Python 100x faster? This project explores the performance frontiers of Python, comparing standard execution against modern acceleration frameworks.
-
----
-
-### 📊 Performance Showdown
-
-I benchmarked three computationally intensive tasks across different scales:
-
-1.  **Sum of Squares:** Large-scale reduction.
-2.  **Matrix Multiplication:** Memory-bandwidth and FLOPs intensive.
-3.  **Mandelbrot Set:** Iterative complex number math (Fractal generation).
+How do you make Python 100x faster? Most developers know Python is "slow" for loops, but few understand which tool to pick for specific workloads. I stress-tested five different acceleration methods across three distinct mathematical domains, scaling from **$10^6$ to $10^9$ operations.**
 
 ---
 
-### 🚀 Key Results ($20,000 \times 20,000$ Matrix)
+## 🛠️ Technology Stack
 
-| Method | Execution Time | Speedup vs Numba |
-| :--- | :--- | :--- |
-| **Numba (JIT)** | 262.50s | 1x |
-| **NumPy (Vectorized)** | 26.01s | 10.1x |
-| **CUDA GPU (PyTorch)** | **2.42s** | **108.5x** |
+To find the performance frontier, I compared the following frameworks:
 
----
-
-### 🛠️ Technology Stack
-
-* **Vanilla Python & Multiprocessing:** Establishing the baseline.
+* **Vanilla Python & Multiprocessing:** Establishing the raw baseline.
 * **NumPy:** Leveraging vectorized operations and C-optimized backends.
 * **Numba:** Using Just-In-Time (JIT) compilation to transform Python into machine code.
 * **Cython:** Compiling Python-like code into C extensions for raw execution speed.
@@ -49,14 +31,57 @@ I benchmarked three computationally intensive tasks across different scales:
 
 ---
 
-### 📈 Analysis & Insights
+## 📊 Stress Test: Matrix Multiplication (MatMul)
 
-* **The GPU Advantage:** While the GPU wins at scale, for small tasks, NumPy is often faster due to the overhead of moving data from CPU (RAM) to GPU (VRAM).
-* **Optimization Sweet Spots:**
-    * **Cython** performed exceptionally well on iterative tasks like the Mandelbrot set.
-    * **NumPy** remains the king of convenience for standard linear algebra.
-    * **GPU acceleration** is the only viable path for "Big Data" scales ($20,000+$ matrices).
+MatMul is the backbone of Deep Learning. This benchmark shows how the gap between CPU and GPU widens exponentially as the matrix grows from a standard scale to a "Big Data" scale.
 
-### 🎥 Visualizing the Gap
+| Matrix Size | NumPy (CPU) | Numba (JIT) | CUDA (GPU) | Speedup (GPU vs Numba) |
+| :--- | :--- | :--- | :--- | :--- |
+| **$1,000^2$** | 0.004s | 0.483s | 0.032s | 15x |
+| **$4,000^2$** | 0.212s | 1.234s | 0.108s | 11x |
+| **$20,000^2$** | 26.01s | 262.50s | **2.42s** | **108.5x** |
 
-I developed a real-time animation script that visually demonstrates the "Growth" of the Mandelbrot set. This shows how much faster accelerated methods reach the final high-resolution image compared to standard Python loops.
+> **Key Insight:** At $20,000$ scale, the GPU isn't just faster—it’s the difference between a 2.4-second "blink" and a 4.3-minute wait.
+
+---
+
+## 🔬 Computational Comparison by Task
+
+Not every tool is a "silver bullet." My findings show that the "winner" changes depending on the algorithm type.
+
+### 1. The Iterative King: Mandelbrot ($4,000 \times 4,000$)
+For complex, iterative logic where vectorization is difficult:
+* **Cython:** 3.55s (Winner for CPU-based logic)
+* **GPU:** 3.37s
+* **NumPy:** 126.60s (**Huge failure** due to Python loop overhead)
+
+### 2. The Vectorization King: Sum of Squares ($10^9$)
+* **Cython:** 0.16s
+* **NumPy:** 0.19s
+* **Numba:** 0.87s
+* **GPU:** 0.59s 
+
+**Wait, why is the GPU slower here?**
+This reveals the **"Transfer Tax."** For simple reductions like Sum of Squares, the time it takes to move $10^9$ integers from RAM to VRAM (GPU memory) is longer than the time the CPU takes to just do the math.
+
+---
+
+## 📈 Summary of Efficiency
+
+| Category | Best For... | Why? |
+| :--- | :--- | :--- |
+| **Py Single/Multi** | Scripting | High overhead; only for logic, not heavy math. |
+| **NumPy** | Standard Data Science | Optimized C-routines; king of convenience. |
+| **Cython** | Custom Algorithms | Compiles to C; best for complex loops the GPU can't handle. |
+| **CUDA (PyTorch)** | Massive Parallelism | Unbeatable for MatMul and high-resolution fractals. |
+
+---
+
+## 🎥 Visualizing the Gap
+
+I developed a real-time animation script that visually demonstrates the "growth" of the Mandelbrot set. This shows how much faster accelerated methods reach the final high-resolution image compared to standard Python loops. 
+
+---
+
+## 💡 Final Thoughts
+The project proves that **optimization is context-dependent.** Use NumPy for daily tasks, Cython for custom CPU bottlenecks, and CUDA only when the computational density justifies the data transfer overhead.
