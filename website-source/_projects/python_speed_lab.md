@@ -4,7 +4,7 @@ title: Python Speed Lab
 description: Benchmarking CPU vs. GPU performance across NumPy, Numba, Cython, and CUDA.
 img: assets/img/projects/speed_lab/benchmark_results_all.png
 importance: 1
-category: work
+category: HPC
 toc:
   sidebar: left
 ---
@@ -191,6 +191,10 @@ High-performance Python isn't about using the "fastest" tool; it's about using t
 1. **Complex Math + Large Data (Fits VRAM):** Use GPU.
 2. **Simple Math + Massive Data (Exceeds VRAM):** Use Cython/CPU.
 3. **Rapid Prototyping:** Use NumPy/Numba.
+
+---
+
+[Python Speed Lab Source Code](https://github.com/szmosi/szmosi.github.io/tree/main/1_PythonBenchmark)
 
 <style>
   /* 1. TOC Sidebar Positioning */
