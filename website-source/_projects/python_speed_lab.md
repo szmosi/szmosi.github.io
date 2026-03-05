@@ -5,13 +5,11 @@ description: Benchmarking CPU vs. GPU performance across NumPy, Numba, Cython, a
 img: assets/img/projects/speed_lab/benchmark_results_all.png
 importance: 1
 category: work
+toc:
+  sidebar: left
 ---
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all.png" title="Comprehensive Benchmark Results" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
+
 
 ## 🏎️ The Quest for 100x Speed: From $10^6$ to $10^{11}$
 
@@ -21,21 +19,63 @@ This lab documents a comprehensive stress test of five acceleration methods acro
 
 ---
 
-## 📉 The Baseline: Why We Optimize
-To understand the need for acceleration, we must look at "Standard" Python. Even at a modest scale ($1,000 \times 1,000$), the gap between a standard loop and an optimized library is staggering. Python’s Global Interpreter Lock (GIL) and dynamic typing create significant overhead for every single numerical operation.
+### 📉 The Baseline: Why We Optimize
 
-### Baseline Performance ($1,000 \times 1,000$ Operations)
+To understand the need for acceleration, we must look at "Standard" Python. Even at a modest scale ($1,000^2$ or $10^9$ operations), the gap between unoptimized execution and accelerated frameworks is staggering. Python’s Global Interpreter Lock (GIL) and dynamic typing create massive overhead for every numerical operation.
 
-| Category | Method | Time (s) | Relative Speed |
+### Comprehensive Baseline Performance ($1,000 \times 1,000$ or $10^9$ Ops)
+
+| Category | Method | Time (s) | Efficiency Rank |
 | :--- | :--- | :--- | :--- |
-| **Sum of Squares** | Python Single-Core | 118.61s | 1x (Baseline) |
-| **Sum of Squares** | Python Multi-Core | 23.87s | 5x Faster |
-| **Sum of Squares** | **NumPy (Vectorized)** | **0.19s** | **624x Faster** |
-| **MatMul** | Python Single-Core | 123.13s | 1x (Baseline) |
-| **MatMul** | **NumPy (MKL)** | **0.013s** | **9,470x Faster** |
+| **Sum of Squares** | Python Single-Core | 118.61s | Baseline |
+| **Sum of Squares** | Python Multi-Core | 24.00s | 5x Faster |
+| **Sum of Squares** | NumPy | 0.19s | 624x Faster |
+| **Sum of Squares** | Numba (JIT) | 0.87s | 136x Faster |
+| **Sum of Squares** | Cython | 0.21s | 564x Faster |
+| **Sum of Squares** | GPU (CUDA) | 0.57s | (PCIe Latency) |
+| **MatMul** | Python Multi-Core | 26.02s | Baseline |
+| **MatMul** | NumPy (MKL) | 0.016s | 1,625x Faster |
+| **MatMul** | Numba (JIT) | 0.47s | 55x Faster |
+| **MatMul** | Cython | 0.18s | 144x Faster |
+| **MatMul** | GPU (CUDA) | **0.032s** | 812x Faster |
+| **Mandelbrot** | Python Multi-Core | 7.45s | Baseline |
+| **Mandelbrot** | NumPy | 7.97s | (Vectorization Failure) |
+| **Mandelbrot** | Numba (JIT) | 0.57s | 13x Faster |
+| **Mandelbrot** | Cython | **0.23s** | 32x Faster |
+| **Mandelbrot** | GPU (CUDA) | 0.34s | 21x Faster |
+
+<br>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all_singleincluded.png" title="Comprehensive Benchmark Results All" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 
-**Conclusion:** For basic math, NumPy is so efficient that "Standard" Python shouldn't even be in the conversation. However, as datasets grow, even NumPy's CPU-bound vectorization reaches its limits.
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all.png" title="Comprehensive Benchmark Results Withouth Single Core" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
+
+**Conclusion:** For basic math, NumPy and Cython are so efficient that "Standard" Python shouldn't even be in the conversation. However, as datasets grow to $10,000^2$ and beyond, even these CPU-bound methods reach their limits, triggering the need for the GPU.
+
+---
+
+### The Testing Suite: Design & Methodology
+
+To ensure a rigorous comparison, I designed a testing suite targeting three distinct computational profiles. **Sum of Squares** ($10^9$ elements) measures raw sequential throughput and the impact of the "Transfer Tax" during simple reductions. **Matrix Multiplication** ($1,000^2$ to $20,000^2$) measures memory bandwidth and the efficiency of modern BLAS (Basic Linear Algebra Subprograms) libraries. Finally, the **Mandelbrot Set** ($1,000^2$ to $10,000^2$) evaluates complex branching logic and iterative math that is difficult to vectorize conventionally. 
+
+By starting with these baseline sizes, I identified which models were "performant enough" to move to the next stage. In the following sections, I push only the top-tier candidates (Numba, Cython, and CUDA) into much larger stress tests—scaling up to $10^{11}$ operations—to find where even the most optimized code finally breaks under hardware constraints.
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all_numpy.png" title="Comprehensive Benchmark Results Comperable" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
 
 ---
 
@@ -85,6 +125,7 @@ A critical finding in this lab was the **Memory Overflow** event. If the data is
 | **Chunked GPU** | **VRAM Overflow** | **327.33s** |
 | **Cython (CPU)** | Data in System RAM | **22.03s** |
 
+<br>
 
 **Engineering Lesson:** In cases of VRAM overflow, the GPU becomes **14x slower** than the CPU. Memory management and data locality are often more important than raw clock speed or core count.
 
@@ -103,12 +144,28 @@ To test the limits of the PCIe bus, I ran a simple reduction (Sum of $x^2$) up t
 
 > **The Transfer Paradox:** At $10^{11}$ scale, **Cython** outperformed the GPU. Why? Because the GPU spent more time waiting for the CPU to send data over the PCIe bus than it spent actually calculating the sum. For simple math on large data, the communication overhead exceeds the computation benefit.
 
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid loading="eager" path="assets/img/projects/speed_lab/benchmark_results_all_large.png" title="Comprehensive Benchmark Results Best" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+
 ---
 
 ## 🎥 Visualizing the Gap: Real-Time Rendering
 I developed a series of visualization scripts to demonstrate these benchmarks in real-time. 
 
 * **Fractal Layering:** A real-time animation that renders the Mandelbrot set layer-by-layer. This showcases the raw speed of GPU-accelerated frame generation ($~60$ FPS) vs. the slow crawl of standard Python ($<1$ FPS).
+
+<div class="row justify-content-center">
+    <div class="col-sm-10 mt-3 mt-md-0">
+        <video width="100%" height="auto" controls autoplay loop muted class="img-fluid rounded z-depth-1">
+            <source src="{{ '/assets/video/projects/speed_lab/mandelbrot_growth_replay.mp4' | relative_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
 * **Memory Heatmaps:** Visualizes how Numba and Cython access memory vs. the unoptimized "cache-thrashing" of standard Python loops.
 * **The Bottleneck Reveal:** A side-by-side video comparison where the CPU progress bar lags significantly behind the GPU until the dataset hits the "VRAM Ceiling," at which point the GPU progress bar visually "stutters" or stops.
 
@@ -134,3 +191,79 @@ High-performance Python isn't about using the "fastest" tool; it's about using t
 1. **Complex Math + Large Data (Fits VRAM):** Use GPU.
 2. **Simple Math + Massive Data (Exceeds VRAM):** Use Cython/CPU.
 3. **Rapid Prototyping:** Use NumPy/Numba.
+
+<style>
+  /* 1. TOC Sidebar Positioning */
+  #toc-sidebar {
+    width: 8px !important;
+    height: 80vh !important; /* Slightly shorter so it doesn't hit the bottom */
+    position: fixed !important;
+    top: 120px !important;   /* Pushes the TOC down from the top of the page */
+    left: 0 !important;
+    background: var(--global-theme-color) !important; 
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    overflow: hidden !important;
+    z-index: 9999 !important;
+    opacity: 0.3 !important;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    border-radius: 0 5px 5px 0; /* Rounds the inner edge for a cleaner look */
+  }
+
+  #toc-sidebar:hover {
+    width: 280px !important;
+    opacity: 1 !important;
+    background: var(--global-bg-color) !important;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.2) !important;
+    padding: 30px 15px !important;
+  }
+
+  /* 2. Relative Video Centering */
+    video {
+        display: block !important;
+        position: relative !important;
+        left: 50% !important;
+        transform: translateX(-35%) !important; /* This is the key for true relative centering */
+        margin-top: 3rem !important;
+        margin-bottom: 3rem !important;
+        max-width: 95% !important;
+        width: 850px !important; /* Solid size for benchmarking visibility */
+        height: auto !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+  /* 3. Grid & Content Centering (The "No Column" Fix) */
+  .col-sm-9 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin: 0 auto !important;
+  }
+
+  .row {
+    display: block !important;
+  }
+
+  .post {
+    margin: 0 auto !important;
+    float: none !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100% !important;
+  }
+
+  .post-content, .post-description, p {
+    text-align: justify !important;
+    text-justify: inter-word !important;
+    line-height: 1.6;
+    width: 100% !important;
+  }
+
+  /* 4. Cleaning up theme leftovers */
+  footer, .footer-fixed {
+    display: none !important;
+  }
+
+  .table-responsive {
+    width: 100% !important;
+  }
+</style>
