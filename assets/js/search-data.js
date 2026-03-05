@@ -4,14 +4,14 @@ const ninja = document.querySelector('ninja-keys');
 // add the home and posts menu items
 ninja.data = [{
     id: "nav-about",
-    title: "about",
+    title: "About",
     section: "Navigation",
     handler: () => {
       window.location.href = "/";
     },
   },{id: "nav-projects",
-          title: "projects",
-          description: "A growing collection of my cool projects.",
+          title: "Projects",
+          description: "A growing collection of my Data Science projects.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/projects/";
@@ -440,6 +440,11 @@ ninja.data = [{
           description: "another project with an image 🎉",
           section: "Projects",handler: () => {
               window.location.href = "/projects/9_project/";
+            },},{id: "projects-python-speed-lab",
+          title: 'Python Speed Lab',
+          description: "Benchmarking CPU vs. GPU performance across NumPy, Numba, Cython, and CUDA.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/python_speed_lab/";
             },},{id: "teachings-data-science-fundamentals",
           title: 'Data Science Fundamentals',
           description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
