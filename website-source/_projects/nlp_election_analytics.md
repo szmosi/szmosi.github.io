@@ -3,7 +3,7 @@ layout: page
 title: "NLP Election Analytics: Classical vs Transformer Models"
 description: "An MSc group project comparing sentiment analysis and topic modelling methods on 2024 US election-related Twitter/X discussions."
 img: assets/img/projects/nlp_election/bertopic_top_topics.png
-importance: 2
+importance: 1
 category: "Data Science"
 github: https://github.com/szmosi/nlp-election-analytics
 ---

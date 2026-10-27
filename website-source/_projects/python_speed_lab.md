@@ -3,7 +3,7 @@ layout: page
 title: Python Speed Lab
 description: Benchmarking CPU vs. GPU performance across NumPy, Numba, Cython, and CUDA.
 img: assets/img/projects/speed_lab/benchmark_results_all.png
-importance: 1
+importance: 3
 category: HPC
 github: https://github.com/szmosi/python-speed-lab
 toc:
