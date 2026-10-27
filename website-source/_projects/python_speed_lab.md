@@ -3,8 +3,9 @@ layout: page
 title: Python Speed Lab
 description: Benchmarking CPU vs. GPU performance across NumPy, Numba, Cython, and CUDA.
 img: assets/img/projects/speed_lab/benchmark_results_all.png
-importance: 1
+importance: 3
 category: HPC
+github: https://github.com/szmosi/python-speed-lab
 toc:
   sidebar: left
 ---
@@ -194,7 +195,7 @@ High-performance Python isn't about using the "fastest" tool; it's about using t
 
 ---
 
-[Python Speed Lab Source Code](https://github.com/szmosi/szmosi.github.io/tree/main/1_PythonBenchmark)
+[Python Speed Lab Source Code](https://github.com/szmosi/python-speed-lab)
 
 <style>
   /* 1. TOC Sidebar Positioning */

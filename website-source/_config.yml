@@ -8,13 +8,14 @@ first_name: Marton
 last_name: Szamosi
 contact_note: #>
   #You can even add a little note about which of these is the best way to reach you.
-description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  #A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+description: >
+  Portfolio of Marton Szamosi, focused on data science, data analytics, Python development,
+  automation, and computational performance.
 footer_text: #>
   #Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   #Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
   #Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
-keywords: jekyll, jekyll-theme, academic-website, portfolio-website # add your own keywords or leave empty
+keywords: data science, data analytics, Python, automation, computational performance, portfolio
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: winter-hat.png # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
@@ -58,7 +59,6 @@ footer_fixed: true
 search_enabled: true
 socials_in_search: false
 posts_in_search: true
-bib_search: true
 
 # Dimensions
 max_width: 80%
@@ -91,8 +91,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: al-folio # blog_name will be displayed in your blog page
-blog_description: a simple whitespace theme for academics
+blog_name: Marton's Technical Blog # blog_name will be displayed in a future blog page
+blog_description: Technical articles on data, Python, automation, and computational performance.
 permalink: /blog/:year/:title/
 lsi: false # produce an index for related posts
 
@@ -120,26 +120,6 @@ giscus:
   emit_metadata: 0
   lang: en
 
-# Disqus comments (DEPRECATED)
-disqus_shortname: al-folio # put your disqus shortname
-# https://help.disqus.com/en/articles/1717111-what-s-a-shortname
-
-# External sources.
-# If you have blog posts published on medium.com or other external sources,
-# you can display them in your blog by adding a link to the RSS feed.
-# Optional: Set default categories and tags for posts from each source.
-external_sources:
-  - name: medium.com
-    rss_url: https://medium.com/@al-folio/feed
-    categories: [external-posts]
-    tags: [medium]
-  - name: Google Blog
-    posts:
-      - url: https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/
-        published_date: 2024-05-14
-    categories: [external-posts]
-    tags: [google]
-
 # -----------------------------------------------------------------------------
 # Newsletter
 # -----------------------------------------------------------------------------
@@ -154,15 +134,7 @@ newsletter:
 # -----------------------------------------------------------------------------
 
 collections:
-  books:
-    output: true
-  news:
-    defaults:
-      layout: post
-    output: true
   projects:
-    output: true
-  teachings:
     output: true
 
 # -----------------------------------------------------------------------------
@@ -185,7 +157,10 @@ kramdown:
 # Includes & excludes
 include: ["_pages", "_scripts"]
 exclude:
+  - AGENTS.md
+  - ANALYTICS.md
   - bin/
+  - CLAUDE.md
   - CONTRIBUTING.md
   - CUSTOMIZE.md
   - Dockerfile
@@ -199,10 +174,13 @@ exclude:
   - lighthouse_results/
   - package.json
   - package-lock.json
-  - _pages/about_einstein.md
   - purgecss.config.js
+  - QUICKSTART.md
   - README.md
   - readme_preview/
+  - requirements.txt
+  - SEO.md
+  - TROUBLESHOOTING.md
   - vendor
 keep_files:
   - CNAME
@@ -215,14 +193,12 @@ plugins:
   - jekyll-cache-bust
   - jekyll-email-protect
   - jekyll-feed
-  - jekyll-get-json
   - jekyll-imagemagick
   - jekyll-jupyter-notebook
   - jekyll-link-attributes
   - jekyll-minifier
   - jekyll-paginate-v2
   - jekyll-regex-replace
-  - jekyll/scholar
   - jekyll-sitemap
   - jekyll-socials
   - jekyll-tabs
@@ -268,86 +244,8 @@ jekyll-archives:
       year: "/blog/:year/"
       tags: "/blog/:type/:name/"
       categories: "/blog/:type/:name/"
-  books:
-    enabled: [year, tags, categories] # enables year, tag and category archives (remove if you need to disable one of them).
-
-display_tags: ["formatting", "images", "links", "math", "code", "blockquotes"] # these tags will be displayed on the front page of your blog
-display_categories: ["external-services"] # these categories will be displayed on the front page of your blog
-
-# -----------------------------------------------------------------------------
-# Jekyll Scholar
-# -----------------------------------------------------------------------------
-
-scholar:
-  last_name: [Einstein]
-  first_name: [Albert, A.]
-
-  style: apa
-  locale: en
-
-  source: /_bibliography/
-  bibliography: papers.bib
-  bibliography_template: bib
-  # Note: if you have latex math in your bibtex, the latex filter
-  # preprocessing may conflict with MathJAX if the latter is enabled.
-  # See https://github.com/alshedivat/al-folio/issues/357.
-  bibtex_filters: [latex, smallcaps, superscript]
-
-  replace_strings: true
-  join_strings: true
-
-  details_dir: bibliography
-  details_link: Details
-
-  query: "@*"
-  group_by: year
-  group_order: descending
-
-# Display different badges withs stats for your publications
-# Customize badge behavior in _layouts/bib.liquid
-enable_publication_badges:
-  altmetric: true # Altmetric badge (Customization options: https://badge-docs.altmetric.com/index.html)
-  dimensions: true # Dimensions badge (Customization options: https://badge.dimensions.ai/)
-  google_scholar: true # Google Scholar badge (https://scholar.google.com/intl/en/scholar/citations.html)
-  inspirehep: true # Inspire HEP badge (https://help.inspirehep.net/knowledge-base/citation-metrics/)
-
-# Filter out certain bibtex entry keywords used internally from the bib output
-filtered_bibtex_keywords:
-  [
-    abbr,
-    abstract,
-    additional_info,
-    altmetric,
-    annotation,
-    arxiv,
-    award,
-    award_name,
-    bibtex_show,
-    blog,
-    code,
-    dimensions,
-    eprint,
-    google_scholar_id,
-    hal,
-    html,
-    inspirehep_id,
-    pdf,
-    pmid,
-    poster,
-    preview,
-    selected,
-    slides,
-    supp,
-    video,
-    website,
-  ]
-
-# Maximum number of authors to be shown for each publication (more authors are visible on click)
-max_author_limit: 3 # leave blank to always show all authors
-more_authors_animation_delay: 10 # more authors are revealed on click using animation; smaller delay means faster animation
-
-# Enables publication thumbnails. If disabled, none of the publications will display thumbnails, even if specified in the bib entry.
-enable_publication_thumbnails: true
+display_tags: [] # populate when genuine blog posts are added
+display_categories: [] # populate when genuine blog posts are added
 
 # -----------------------------------------------------------------------------
 # Jekyll Link Attributes
@@ -367,7 +265,7 @@ external_links:
 # MAKE SURE imagemagick is installed and on your PATH before enabling imagemagick. In a terminal, run:
 #   convert -version
 imagemagick:
-  enabled: true # enables responsive images for your site (recommended, see https://github.com/alshedivat/al-folio/issues/537)
+  enabled: false # enables responsive images for your site (recommended, see https://github.com/alshedivat/al-folio/issues/537)
   widths:
     - 480
     - 800
@@ -648,25 +546,3 @@ third_party_libraries:
       css: "https://cdn.jsdelivr.net/npm/venobox@{{version}}/dist/venobox.min.css"
       js: "https://cdn.jsdelivr.net/npm/venobox@{{version}}/dist/venobox.min.js"
     version: "2.1.8"
-
-# -----------------------------------------------------------------------------
-# Get external JSON data
-# -----------------------------------------------------------------------------
-
-jekyll_get_json:
-  - data: resume
-    json: assets/json/resume.json # it can also be an url
-
-jsonresume:
-  - basics
-  - work
-  - education
-  - publications
-  - projects
-  - volunteer
-  - awards
-  - certificates
-  - skills
-  - languages
-  - interests
-  - references
