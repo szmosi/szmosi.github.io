@@ -3,9 +3,11 @@ name: Deploy site
 on:
   push:
     branches:
-      - main # Change 1: removed master, only tracking main
+      - main
     paths:
-      - "website-source/**" # Change 2: only watch the website folder
+      - "website-source/**"
+      - ".github/workflows/deploy.yml"
+
   workflow_dispatch:
 
 permissions:
@@ -14,40 +16,42 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     defaults:
       run:
-        working-directory: ./website-source # Change 3: Tells GitHub where the files are
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        working-directory: ./website-source
 
-      - name: Setup Ruby 💎
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3.5"
+          ruby-version: "3.3"
           bundler-cache: true
-          working-directory: ./website-source # Change 4: Crucial for your website engine
+          working-directory: ./website-source
 
-      - name: Setup Python 🐍
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
 
-      - name: Install and Build 🔧
+      - name: Install dependencies and build
         run: |
-          sudo apt-get update && sudo apt-get install -y imagemagick
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
           pip3 install --upgrade nbconvert
           export JEKYLL_ENV=production
           bundle exec jekyll build
 
-      - name: Purge unused CSS 🧹
+      - name: Purge unused CSS
         run: |
           npm install -g purgecss
           purgecss -c purgecss.config.js
 
-      - name: Deploy 🚀
-        if: github.event_name != 'pull_request'
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: website-source/_site # Updated path
+          folder: website-source/_site
           branch: gh-pages
